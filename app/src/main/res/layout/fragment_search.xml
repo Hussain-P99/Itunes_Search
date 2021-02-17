@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:hint="@string/search_hint"
+            app:boxBackgroundColor="@null"
             app:endIconCheckable="true"
             app:endIconDrawable="@drawable/ic_close"
             app:endIconMode="custom">
@@ -40,6 +41,7 @@
                 android:maxLines="1"
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
