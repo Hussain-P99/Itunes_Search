@@ -36,8 +36,9 @@ class SearchFragment : Fragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        super.onViewCreated(view, savedInstanceState)
 
         connectionManager =
             activity?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -49,35 +50,38 @@ class SearchFragment : Fragment() {
         viewModel = ViewModelProvider(this, factory).get(SearchViewModel::class.java)
         binding.viewModel = viewModel
 
-        binding.searchBox.setEndIconOnClickListener {
-            binding.searchText.text?.clear()
-        }
+
 
         binding.searchText.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 Log.i("debug", "Search Initiated")
-                val inputMethodManager =
-                    activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
-                // initiate search
-                val term = binding.searchText.text.toString()
-                adapter.tracks = listOf()
-                if (connectionManager.activeNetworkInfo?.isConnected == true) {
-                    viewModel.search(term)
-                } else {
-                    viewModel.getSearchResult(term)
-                }
-
+                searchItunes()
                 true
-
             } else {
                 false
             }
         }
 
+        binding.searchButton.setOnClickListener {
+            searchItunes()
+        }
 
         setupRecyclerView()
 
+    }
+
+    private fun searchItunes() {
+        val inputMethodManager =
+            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
+        // initiate search
+        val term = binding.searchText.text.toString()
+        adapter.tracks = listOf()
+        if (connectionManager.activeNetworkInfo?.isConnected == true) {
+            viewModel.search(term)
+        } else {
+            viewModel.getSearchResult(term)
+        }
     }
 
     private fun setupRecyclerView() {
