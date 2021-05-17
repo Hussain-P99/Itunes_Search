@@ -7,7 +7,18 @@
 
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.hsn.itunessearch.search.SearchFragment"
+        android:name="com.hsn.itunessearch.ui.search.SearchFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_search" />
+
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.hsn.itunessearch.ui.details.DetailsFragment"
+        android:label=""
+        tools:layout="@layout/fragment_detail" >
+        <argument
+            android:name="trackDetails"
+            app:argType="com.hsn.itunessearch.database.Track" />
+    </fragment>
+    <action android:id="@+id/action_global_detailsFragment" app:destination="@id/detailsFragment" />
 </navigation>

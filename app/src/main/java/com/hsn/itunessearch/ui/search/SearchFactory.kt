@@ -1,4 +1,4 @@
-package com.hsn.itunessearch.search
+package com.hsn.itunessearch.ui.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

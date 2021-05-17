@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginVertical="16dp"
+        android:orientation="vertical"
+        android:transitionGroup="true"
+        android:transitionName="@string/detail_transition">
+
+
+        <ImageView
+            android:id="@+id/ilAlbumArt"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:importantForAccessibility="no"
+            android:scaleType="fitXY"
+            tools:src="@tools:sample/avatars" />
+
+        <include
+            android:id="@+id/ilTrackName"
+            layout="@layout/item_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+        <include
+            android:id="@+id/ilArtistName"
+            layout="@layout/item_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+        <include
+            android:id="@+id/ilGenre"
+            layout="@layout/item_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+        <include
+            android:id="@+id/ilReleaseDate"
+            layout="@layout/item_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+        <include
+            android:id="@+id/ilCountry"
+            layout="@layout/item_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+        <include
+            android:id="@+id/ilContentRating"
+            layout="@layout/item_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+
+        <include
+            android:id="@+id/ilDescription"
+            layout="@layout/item_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+
+    </LinearLayout>
+</layout>

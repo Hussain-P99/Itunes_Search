@@ -1,27 +1,42 @@
 package com.hsn.itunessearch.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hsn.itunessearch.R
 import com.hsn.itunessearch.database.Track
 import com.hsn.itunessearch.databinding.DataItemTrackBinding
 
-class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
-
-    var tracks = listOf<Track>()
+class TrackAdapter(val trackAdapterInterface: TrackAdapterInterface) :
+    ListAdapter<Track, TrackViewHolder>(TrackDiff()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         return TrackViewHolder.infView(parent)
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        val track = tracks[position]
-        holder.bind(track)
+        val track = getItem(position)
+        holder.bind(track, trackAdapterInterface)
+    }
+}
+
+interface TrackAdapterInterface {
+    fun onClick(view: View, track: Track)
+}
+
+class TrackDiff : DiffUtil.ItemCallback<Track>() {
+    override fun areItemsTheSame(oldItem: Track, newItem: Track): Boolean {
+        return oldItem.trackName == newItem.trackName
     }
 
-    override fun getItemCount(): Int = tracks.size
+    override fun areContentsTheSame(oldItem: Track, newItem: Track): Boolean {
+        return oldItem == newItem
+    }
+
 }
 
 class TrackViewHolder(private val binding: DataItemTrackBinding) :
@@ -34,8 +49,12 @@ class TrackViewHolder(private val binding: DataItemTrackBinding) :
         }
     }
 
-    fun bind(track: Track) {
-        binding.track = track
+    fun bind(track: Track, trackAdapterInterface: TrackAdapterInterface) {
+
+        binding.root.transitionName = "track_${track.trackName}"
+        binding.root.setOnClickListener {
+            trackAdapterInterface.onClick(it, track)
+        }
 
         Glide.with(itemView.context)
             .load(track.albumArt)

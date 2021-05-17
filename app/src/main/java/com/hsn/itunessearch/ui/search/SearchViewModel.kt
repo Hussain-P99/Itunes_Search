@@ -1,4 +1,4 @@
-package com.hsn.itunessearch.search
+package com.hsn.itunessearch.ui.search
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -13,17 +13,14 @@ import kotlinx.coroutines.launch
 class SearchViewModel(val ituneRepo: ItuneSearch, val itunesDao: ItunesDao) : ViewModel() {
 
 
-    val _trackList = MutableLiveData<List<Track>>()
+    val _trackList = MutableLiveData<List<Track>>(listOf())
     val trackList: LiveData<List<Track>>
         get() = _trackList
 
-    var showProgressBar = MutableLiveData<Boolean>()
+    var showProgressBar = MutableLiveData<Boolean>(false)
         private set
 
-    var showEmpty = MutableLiveData<Boolean>()
-        private set
-
-    var showRecycler = MutableLiveData<Boolean>()
+    var showEmpty = MutableLiveData<Boolean>(true)
         private set
 
 
@@ -36,7 +33,6 @@ class SearchViewModel(val ituneRepo: ItuneSearch, val itunesDao: ItunesDao) : Vi
         if (term.isEmpty()) return
         Log.i("debug", "searching $term")
 
-        showRecyclerGrid(false)
         showProgress(true)
         showEmpty(false)
 
@@ -50,9 +46,6 @@ class SearchViewModel(val ituneRepo: ItuneSearch, val itunesDao: ItunesDao) : Vi
         }
     }
 
-    fun showRecyclerGrid(visible: Boolean) {
-        showRecycler.value = visible
-    }
 
     fun showProgress(visible: Boolean) {
         showProgressBar.value = visible
@@ -63,7 +56,6 @@ class SearchViewModel(val ituneRepo: ItuneSearch, val itunesDao: ItunesDao) : Vi
     }
 
     fun getSearchResult(term: String) {
-        showRecyclerGrid(false)
         showProgress(true)
         showEmpty(false)
         viewModelScope.launch {

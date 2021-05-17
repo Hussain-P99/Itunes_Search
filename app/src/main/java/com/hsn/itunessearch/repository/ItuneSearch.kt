@@ -24,13 +24,15 @@ class ItuneSearch(private val localdb: ItunesDao) {
             result.results.forEach {
                 tracks.add(
                     Track(
-                        it.trackName,
-                        it.artistName,
-                        it.albumArt,
-                        it.releaseDate,
-                        it.genre,
-                        it.country,
-                        searchTerm
+                        trackName = it.trackName,
+                        artistName = it.artistName,
+                        albumArt = it.albumArt,
+                        releaseDate = it.releaseDate,
+                        genre = it.genre,
+                        country = it.country,
+                        searchTerm = searchTerm,
+//                        contentRating = it.contentRating,
+//                        description = it.description,
                     )
                 )
             }

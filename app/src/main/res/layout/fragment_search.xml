@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -10,19 +11,20 @@
 
         <variable
             name="viewModel"
-            type="com.hsn.itunessearch.search.SearchViewModel" />
+            type="com.hsn.itunessearch.ui.search.SearchViewModel" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".search.SearchFragment">
+        tools:context=".ui.search.SearchFragment">
 
 
         <com.google.android.material.appbar.MaterialToolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:contentInsetStartWithNavigation="0dp"
             app:navigationIcon="@drawable/ic_home">
 
             <LinearLayout
@@ -34,22 +36,27 @@
                     android:id="@+id/searchText"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_margin="2dp"
                     android:layout_weight="1"
-                    android:background="@null"
+                    android:background="@drawable/edit_text_bg"
+                    android:drawablePadding="2dp"
                     android:hint="@string/search_hint"
                     android:imeOptions="actionSearch|flagNoExtractUi"
                     android:importantForAutofill="no"
-                    android:inputType="textCapWords|text"
+                    android:inputType="text"
                     android:maxLines="1"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp"
                     android:singleLine="true" />
 
                 <ImageButton
                     android:id="@+id/searchButton"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@null"
+                    android:background="?attr/actionBarItemBackground"
                     android:importantForAccessibility="no"
                     android:src="@drawable/ic_search" />
+
             </LinearLayout>
 
         </com.google.android.material.appbar.MaterialToolbar>
@@ -64,17 +71,33 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <TextView
+                android:id="@+id/tvSearchResultCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:padding="8dp"
+                android:text="@{@string/results_found(viewModel.trackList.size())}"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:visibility="@{viewModel.trackList.empty ? View.INVISIBLE : View.VISIBLE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="49 Found" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/searchRecycler"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_margin="8dp"
-                android:visibility="@{viewModel.showRecycler ? View.VISIBLE : View.INVISIBLE}"
+                android:transitionGroup="true"
+                android:visibility="@{viewModel.trackList.empty ? View.INVISIBLE : View.VISIBLE}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvSearchResultCount"
                 tools:listitem="@layout/data_item_track" />
 
             <com.google.android.material.progressindicator.CircularProgressIndicator
@@ -97,6 +120,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/nothing_found"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
                 android:visibility="@{viewModel.showEmpty ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

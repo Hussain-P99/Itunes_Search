@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide
 import com.hsn.itunessearch.R
 
 
-@BindingAdapter("app:loadImage")
+@BindingAdapter("loadImage")
 fun loadImage(imgView: ImageView, url: String) {
     Glide.with(imgView.context)
         .load(Uri.parse(url))

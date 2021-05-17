@@ -1,4 +1,4 @@
-package com.hsn.itunessearch.search
+package com.hsn.itunessearch.ui.search
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -9,23 +9,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.transition.MaterialElevationScale
+import com.hsn.itunessearch.R
 import com.hsn.itunessearch.adapter.TrackAdapter
+import com.hsn.itunessearch.adapter.TrackAdapterInterface
 import com.hsn.itunessearch.database.ItunesDatabase
+import com.hsn.itunessearch.database.Track
 import com.hsn.itunessearch.databinding.FragmentSearchBinding
 import com.hsn.itunessearch.repository.ItuneSearch
 import com.hsn.itunessearch.util.RecyclerViewDecorator
 
 
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment(), TrackAdapterInterface {
 
 
     private lateinit var binding: FragmentSearchBinding
     private lateinit var viewModel: SearchViewModel
     private lateinit var connectionManager: ConnectivityManager
-    private val adapter = TrackAdapter()
+    private val adapter = TrackAdapter(this)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,6 +47,8 @@ class SearchFragment : Fragment() {
 
         super.onViewCreated(view, savedInstanceState)
 
+        postponeEnterTransition()
+
         connectionManager =
             activity?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
@@ -49,7 +58,6 @@ class SearchFragment : Fragment() {
 
         viewModel = ViewModelProvider(this, factory).get(SearchViewModel::class.java)
         binding.viewModel = viewModel
-
 
 
         binding.searchText.setOnEditorActionListener { v, actionId, event ->
@@ -62,12 +70,15 @@ class SearchFragment : Fragment() {
             }
         }
 
+
+
         binding.searchButton.setOnClickListener {
             searchItunes()
         }
 
         setupRecyclerView()
 
+        view.doOnPreDraw { startPostponedEnterTransition() }
     }
 
     private fun searchItunes() {
@@ -76,9 +87,10 @@ class SearchFragment : Fragment() {
         inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
         // initiate search
         val term = binding.searchText.text.toString()
-        adapter.tracks = listOf()
+        adapter.submitList(listOf())
         if (connectionManager.activeNetworkInfo?.isConnected == true) {
             viewModel.search(term)
+            binding.root.clearFocus()
         } else {
             viewModel.getSearchResult(term)
         }
@@ -97,10 +109,23 @@ class SearchFragment : Fragment() {
             }
 
             Log.i("debug", "$it")
-
-            viewModel.showRecyclerGrid(true)
-            adapter.tracks = it
-            adapter.notifyDataSetChanged()
+            adapter.submitList(it)
         })
+    }
+
+    override fun onClick(view: View, track: Track) {
+        val destinationTransitionName = getString(R.string.detail_transition)
+        val extras = FragmentNavigatorExtras(view to destinationTransitionName)
+        exitTransition = MaterialElevationScale(false).apply {
+            duration = resources.getInteger(R.integer.anim_med).toLong()
+        }
+
+        returnTransition = MaterialElevationScale(true).apply {
+            duration = resources.getInteger(R.integer.anim_med).toLong()
+        }
+        findNavController().navigate(
+            SearchFragmentDirections.actionGlobalDetailsFragment(track),
+            extras
+        )
     }
 }
